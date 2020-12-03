@@ -1,0 +1,20 @@
+os: linux
+services: docker
+language: python
+stages:
+  - unittest
+  - deploy
+
+test_python:
+  stage: unittest
+  script:
+    - python -m pytest -v
+
+deploy_python:
+  stage: deploy
+  script:
+    - sh docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - sh docker build -f Dockerfile -t $TRAVIS_REPO_SLUG:latest .
+    - sh docker push $TRAVIS_REPO_SLUG
+
+  
